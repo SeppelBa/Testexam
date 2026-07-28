@@ -3,76 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychologische Grundlagen - Lern-App</title>
+    <title>Psychologische Grundlagen – Lern-App</title>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
-            --border-color: #d1d5db;
-            --success: #10b981;
-            --error: #ef4444;
+            --md-sys-color-primary: #1a73e8;
+            --md-sys-color-primary-container: #d2e3fc;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-surface: #ffffff;
+            --md-sys-color-background: #f8f9fa;
+            --md-sys-color-on-surface: #202124;
+            --md-sys-color-outline: #dadce0;
+            --md-sys-color-success: #137333;
+            --md-sys-color-success-container: #e6f4ea;
+            --md-sys-color-error: #c5221f;
+            --md-sys-color-error-container: #fce8e6;
+            --md-shape-corner-medium: 12px;
+            --md-shape-corner-large: 24px;
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-surface);
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .container {
-            background: var(--card-bg);
+            background: var(--md-sys-color-surface);
             width: 100%;
-            max-width: 700px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 720px;
+            padding: 32px;
+            border-radius: var(--md-shape-corner-large);
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
             box-sizing: border-box;
         }
 
         h1, h2 {
-            color: var(--primary);
+            color: var(--md-sys-color-on-surface);
             text-align: center;
+            font-weight: 500;
             margin-top: 0;
         }
 
+        h1 {
+            font-size: 26px;
+            color: var(--md-sys-color-primary);
+            margin-bottom: 24px;
+        }
+
+        .stats-card {
+            background-color: #f1f3f4;
+            padding: 20px;
+            border-radius: var(--md-shape-corner-medium);
+            margin-bottom: 24px;
+            text-align: center;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
         .btn {
-            background-color: var(--primary);
-            color: white;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
             cursor: pointer;
             width: 100%;
-            margin-top: 10px;
-            transition: background 0.2s;
+            margin-top: 12px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
         }
 
         .btn:hover {
-            background-color: var(--primary-hover);
+            background-color: #1557b0;
+            box-shadow: 0 1px 3px 1px rgba(60,64,67,0.3);
         }
 
         .btn-secondary {
-            background-color: #6b7280;
+            background-color: #f1f3f4;
+            color: #3c4043;
+            box-shadow: none;
         }
         .btn-secondary:hover {
-            background-color: #4b5563;
+            background-color: #e8eaed;
         }
 
         .btn-danger {
-            background-color: var(--error);
+            background-color: #fce8e6;
+            color: var(--md-sys-color-error);
+            box-shadow: none;
         }
         .btn-danger:hover {
-            background-color: #dc2626;
+            background-color: #fad2cf;
         }
 
         .menu-screen, .quiz-screen, .result-screen {
@@ -83,84 +113,109 @@
             display: block;
         }
 
-        .stats-box {
-            background: #eef2ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
         .option-label {
             display: flex;
             align-items: flex-start;
-            background: #f9fafb;
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            background: #ffffff;
+            border: 2px solid var(--md-sys-color-outline);
+            padding: 14px 16px;
+            border-radius: var(--md-shape-corner-medium);
+            margin-bottom: 12px;
             cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
+            transition: all 0.2s;
+            font-size: 15px;
+            line-height: 1.4;
         }
 
         .option-label:hover {
-            background: #f3f4f6;
+            background: #f8f9fa;
+            border-color: #bdc1c6;
         }
 
         .option-label input {
-            margin-top: 3px;
-            margin-right: 12px;
-            transform: scale(1.2);
+            margin-top: 2px;
+            margin-right: 14px;
+            transform: scale(1.3);
+            accent-color: var(--md-sys-color-primary);
+            cursor: pointer;
+        }
+
+        /* Auswertungs-Stile direkt an den Optionen nach dem Absenden */
+        .option-label.correct-answer {
+            background-color: var(--md-sys-color-success-container) !important;
+            border-color: var(--md-sys-color-success) !important;
+            color: var(--md-sys-color-success);
+            font-weight: 500;
+        }
+
+        .option-label.incorrect-answer {
+            background-color: var(--md-sys-color-error-container) !important;
+            border-color: var(--md-sys-color-error) !important;
+            color: var(--md-sys-color-error);
+            font-weight: 500;
         }
 
         .quiz-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             font-size: 14px;
-            color: #6b7280;
+            color: #5f6368;
+            font-weight: 500;
         }
 
         .question-text {
-            font-weight: bold;
+            font-weight: 500;
             font-size: 18px;
             margin-bottom: 20px;
+            line-height: 1.5;
         }
 
-        .feedback {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 6px;
-            font-weight: bold;
+        .feedback-banner {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: var(--md-shape-corner-medium);
+            font-weight: 500;
             text-align: center;
             display: none;
+            font-size: 15px;
         }
 
-        .feedback.correct {
-            background: #d1fae5;
-            color: #065f46;
+        .feedback-banner.correct {
+            background: var(--md-sys-color-success-container);
+            color: var(--md-sys-color-success);
             display: block;
         }
 
-        .feedback.incorrect {
-            background: #fee2e2;
-            color: #991b1b;
+        .feedback-banner.incorrect {
+            background: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-error);
             display: block;
         }
 
-        .action-row {
+        .settings-row {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            font-size: 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .settings-row input {
+            transform: scale(1.3);
+            margin-right: 10px;
+            accent-color: var(--md-sys-color-primary);
         }
 
         @media (max-width: 480px) {
             body {
-                padding: 10px;
+                padding: 8px;
             }
             .container {
-                padding: 15px;
+                padding: 20px;
             }
         }
     </style>
@@ -170,51 +225,48 @@
 <div class="container">
     <!-- STARTSEITE / HAUPTMENÜ -->
     <div id="menuScreen" class="menu-screen active">
-        <h1>Psychologie Lern-App</h1>
-        <div class="stats-box" id="statsBox">
+        <h1>Psychologische Grundlagen</h1>
+        <div class="stats-card" id="statsBox">
             Statistik wird geladen...
         </div>
         
-        <label class="option-label" style="border:none; background:none; justify-content:center;">
-            <input type="checkbox" id="randomizeCheck" style="transform:scale(1);"> Fragen in zufälliger Reihenfolge
+        <label class="settings-row">
+            <input type="checkbox" id="randomizeCheck"> Fragen in zufälliger Reihenfolge
         </label>
 
-        <button class="btn" onclick="startQuiz('all', false)">Komplettes Quiz starten (1-61)</button>
-        <button class="btn btn-secondary" id="repeatFalseBtn" onclick="startQuiz('falseOnly', false)" style="display:none;">Nur falsche Fragen wiederholen</button>
-        <button class="btn btn-danger" onclick="resetStats()">Statistik zurücksetzen</button>
+        <button class="btn" onclick="startQuiz('all')">Komplettes Quiz starten (1–61)</button>
+        <button class="btn btn-secondary" id="repeatFalseBtn" onclick="startQuiz('falseOnly')" style="display:none;">Nur falsche Fragen wiederholen</button>
+        <button class="btn btn-danger" onclick="resetStats()" style="margin-top: 8px;">Statistik zurücksetzen</button>
     </div>
 
     <!-- QUIZ-BILDSCHIRM -->
     <div id="quizScreen" class="quiz-screen">
         <div class="quiz-header">
             <span id="questionProgress">Frage X von Y</span>
-            <button class="btn btn-danger" style="width: auto; padding: 4px 10px; margin: 0; font-size: 12px;" onclick="abortQuiz()">Abbrechen</button>
+            <button class="btn btn-danger" style="width: auto; padding: 6px 14px; margin: 0; font-size: 13px;" onclick="abortQuiz()">Quiz abbrechen</button>
         </div>
         
         <div class="question-text" id="questionText">Fragetext kommt hier...</div>
         <div id="optionsContainer"></div>
         
-        <div id="feedbackBox" class="feedback"></div>
+        <div id="feedbackBox" class="feedback-banner"></div>
 
-        <div class="action-row">
-            <button class="btn" id="submitBtn" onclick="submitAnswer()">Antworten prüfen</button>
-            <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none;">Nächste Frage</button>
-        </div>
+        <button class="btn" id="submitBtn" onclick="submitAnswer()">Antwort überprüfen</button>
+        <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none;">Nächste Frage</button>
     </div>
 
     <!-- ERGEBNIS-BILDSCHIRM -->
     <div id="resultScreen" class="result-screen">
-        <h2>Quiz beendet!</h2>
-        <div class="stats-box" id="resultStatsBox"></div>
+        <h1>Durchgang beendet!</h1>
+        <div class="stats-card" id="resultStatsBox"></div>
         
-        <button class="btn" onclick="startQuiz('all', false)">Gesamtes Quiz wiederholen</button>
-        <button class="btn btn-secondary" id="resultRepeatFalseBtn" onclick="startQuiz('falseOnly', false)">Nur falsche Fragen wiederholen</button>
-        <button class="btn btn-danger" onclick="goToMenu()">Zurück zur Startseite</button>
+        <button class="btn" onclick="startQuiz('all')">Gesamtes Quiz wiederholen</button>
+        <button class="btn btn-secondary" id="resultRepeatFalseBtn" onclick="startQuiz('falseOnly')">Nur falsche Fragen wiederholen</button>
+        <button class="btn btn-secondary" onclick="goToMenu()" style="margin-top: 8px;">Zurück zur Startseite</button>
     </div>
 </div>
 
 <script>
-    // Alle 61 Fragen direkt aus dem Katalog
     const questionsData = [
         {
             id: 1,
@@ -896,9 +948,8 @@
     function updateMenuStats() {
         const statsBox = document.getElementById('statsBox');
         statsBox.innerHTML = `<strong>Deine Lernstatistik:</strong><br>
-            Beantwortete Fragen gesamt: ${stats.totalAnswered}<br>
-            Bisher richtig: ${stats.totalCorrect}<br>
-            Aktuell als falsch markierte Fragen im Pool: ${wrongQuestionIds.length}`;
+            Beantwortete Fragen gesamt: ${stats.totalAnswered} | Richtig: ${stats.totalCorrect}<br>
+            Aktuell gemerkte Falsch-Fragen: <strong>${wrongQuestionIds.length}</strong>`;
 
         const repeatBtn = document.getElementById('repeatFalseBtn');
         const resultRepeatBtn = document.getElementById('resultRepeatFalseBtn');
@@ -912,8 +963,8 @@
         }
     }
 
-    function startQuiz(mode, isRandom) {
-        isRandom = document.getElementById('randomizeCheck').checked;
+    function startQuiz(mode) {
+        const isRandom = document.getElementById('randomizeCheck').checked;
         
         if (mode === 'all') {
             currentQueue = [...questionsData];
@@ -936,7 +987,7 @@
 
     function loadQuestion() {
         const q = currentQueue[currentIndex];
-        document.getElementById('questionProgress').innerText = `Frage ${currentIndex + 1} von ${currentQueue.length} (Frage-Nr. ${q.id})`;
+        document.getElementById('questionProgress').innerText = `Frage ${currentIndex + 1} von ${currentQueue.length} (ID: ${q.id})`;
         document.getElementById('questionText').innerText = q.text;
         
         const container = document.getElementById('optionsContainer');
@@ -945,6 +996,7 @@
         q.options.forEach((opt, index) => {
             const label = document.createElement('label');
             label.className = 'option-label';
+            label.id = `optLabel_${index}`;
             label.innerHTML = `
                 <input type="checkbox" name="quizOpt" value="${index}">
                 <span>${opt.text}</span>
@@ -953,7 +1005,7 @@
         });
 
         document.getElementById('feedbackBox').style.display = 'none';
-        document.getElementById('feedbackBox').className = 'feedback';
+        document.getElementById('feedbackBox').className = 'feedback-banner';
         document.getElementById('submitBtn').style.display = 'block';
         document.getElementById('nextBtn').style.display = 'none';
     }
@@ -963,43 +1015,47 @@
         const checkboxes = document.querySelectorAll('input[name="quizOpt"]');
         
         let allCorrect = true;
-        checkboxes.forEach((cb, index) => {
-            const isChecked = cb.checked;
-            const shouldBe = q.options[index].correct;
+        q.options.forEach((opt, index) => {
+            const isChecked = checkboxes[index].checked;
+            const shouldBe = opt.correct;
+            const label = document.getElementById(`optLabel_${index}`);
+
+            // Direkt während des Klicks markieren was richtig oder falsch ist
+            if (shouldBe) {
+                label.classList.add('correct-answer');
+            } else if (isChecked && !shouldBe) {
+                label.classList.add('incorrect-answer');
+            }
+
             if (isChecked !== shouldBe) {
                 allCorrect = false;
             }
         });
 
         stats.totalAnswered++;
+        const feedbackBox = document.getElementById('feedbackBox');
+
         if (allCorrect) {
             stats.totalCorrect++;
-            // Aus Fehlerliste entfernen falls richtig beantwortet
             wrongQuestionIds = wrongQuestionIds.filter(id => id !== q.id);
-            showFeedback(true);
+            feedbackBox.className = 'feedback-banner correct';
+            feedbackBox.innerText = 'Richtig! Alle Punkte korrekt erkannt.';
         } else {
             if (!wrongQuestionIds.includes(q.id)) {
                 wrongQuestionIds.push(q.id);
             }
-            showFeedback(false);
+            feedbackBox.className = 'feedback-banner incorrect';
+            feedbackBox.innerText = 'Leider nicht ganz richtig. Die korrekten Antworten sind grün markiert.';
         }
 
         localStorage.setItem('psy_stats', JSON.stringify(stats));
         localStorage.setItem('psy_wrong_ids', JSON.stringify(wrongQuestionIds));
 
+        // Checkboxen deaktivieren, damit man nach dem Prüfen nichts mehr ändern kann
+        checkboxes.forEach(cb => cb.disabled = true);
+
         document.getElementById('submitBtn').style.display = 'none';
         document.getElementById('nextBtn').style.display = 'block';
-    }
-
-    function showFeedback(isCorrect) {
-        const box = document.getElementById('feedbackBox');
-        if (isCorrect) {
-            box.className = 'feedback correct';
-            box.innerText = 'Richtig beantwortet!';
-        } else {
-            box.className = 'feedback incorrect';
-            box.innerText = 'Leider falsch! Die Frage wurde für die Wiederholung markiert.';
-        }
     }
 
     function nextQuestion() {
@@ -1016,13 +1072,13 @@
         document.getElementById('resultScreen').classList.add('active');
 
         const resBox = document.getElementById('resultStatsBox');
-        resBox.innerHTML = `Du hast diesen Durchgang beendet!<br>
-            Noch zu übende Fragen insgesamt im Speicher: <strong>${wrongQuestionIds.length}</strong>`;
+        resBox.innerHTML = `Du hast diesen Durchgang abgeschlossen!<br><br>
+            Noch zu übende Fragen im Falsch-Pool: <strong>${wrongQuestionIds.length}</strong>`;
         updateMenuStats();
     }
 
     function abortQuiz() {
-        if (confirm("Möchtest du das Quiz wirklich abbrechen? Dein aktueller Fortschritt geht verloren.")) {
+        if (confirm("Möchtest du das Quiz wirklich abbrechen?")) {
             goToMenu();
         }
     }
@@ -1035,7 +1091,7 @@
     }
 
     function resetStats() {
-        if (confirm("Willst du wirklich deine Statistik und die Falsch-Fragen zurücksetzen?")) {
+        if (confirm("Willst du wirklich deine gesamte Statistik und den Falsch-Fragen-Pool zurücksetzen?")) {
             localStorage.removeItem('psy_stats');
             localStorage.removeItem('psy_wrong_ids');
             stats = { totalAnswered: 0, totalCorrect: 0 };
@@ -1044,7 +1100,6 @@
         }
     }
 
-    // Initialisierung beim Laden
     window.onload = init;
 </script>
 
