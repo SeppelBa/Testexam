@@ -779,7 +779,6 @@
         let incorrectQuestions = [];
         let hasChecked = false;
         
-        // Stats
         let stats = {
             tests: parseInt(localStorage.getItem('psy_quiz_tests') || '0'),
             correct: parseInt(localStorage.getItem('psy_quiz_correct') || '0'),
@@ -919,19 +918,24 @@
                 const isSelected = optDiv.classList.contains('selected');
                 
                 optDiv.classList.add('disabled');
-                optDiv.classList.remove('selected');
+                optDiv.classList.remove('selected'); 
+                
+                // Behalte das Häkchen genau so, wie der Nutzer es gesetzt hat
+                if (isSelected) {
+                    icon.innerText = 'check_box';
+                } else {
+                    icon.innerText = 'check_box_outline_blank';
+                }
                 
                 if (opt.isCorrect) {
+                    // Mache den Block grün, weil die Antwort korrekt war
                     optDiv.classList.add('correct');
-                    icon.innerText = 'check_circle';
-                    if (!isSelected) isPerfect = false;
+                    if (!isSelected) isPerfect = false; 
                 } else {
                     if (isSelected) {
+                        // Mache den Block rot, weil die Antwort falsch war, aber ausgewählt wurde
                         optDiv.classList.add('incorrect');
-                        icon.innerText = 'cancel';
                         isPerfect = false;
-                    } else {
-                        icon.innerText = 'radio_button_unchecked';
                     }
                 }
             });
@@ -940,7 +944,7 @@
             if (isPerfect) {
                 score++;
                 stats.correct++;
-                feedback.innerText = "Richtig!";
+                feedback.innerText = "Perfekt!";
                 feedback.className = 'feedback success';
             } else {
                 incorrectQuestions.push(q);
