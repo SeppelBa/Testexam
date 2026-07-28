@@ -3,1105 +3,569 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychologische Grundlagen – Lern-App</title>
+    <title>Psychologische Grundlagen Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
-            --md-sys-color-primary: #1a73e8;
-            --md-sys-color-primary-container: #d2e3fc;
-            --md-sys-color-on-primary: #ffffff;
-            --md-sys-color-surface: #ffffff;
-            --md-sys-color-background: #f8f9fa;
-            --md-sys-color-on-surface: #202124;
-            --md-sys-color-outline: #dadce0;
-            --md-sys-color-success: #137333;
-            --md-sys-color-success-container: #e6f4ea;
-            --md-sys-color-error: #c5221f;
-            --md-sys-color-error-container: #fce8e6;
-            --md-shape-corner-medium: 12px;
-            --md-shape-corner-large: 24px;
+            --primary-color: #1a73e8;
+            --primary-hover: #1557b0;
+            --bg-color: #f8f9fa;
+            --surface-color: #ffffff;
+            --text-main: #202124;
+            --text-secondary: #5f6368;
+            --success-bg: #e6f4ea;
+            --success-text: #137333;
+            --error-bg: #fce8e6;
+            --error-text: #c5221f;
+            --border-color: #dadce0;
         }
-
+        
         body {
-            font-family: "Google Sans", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--md-sys-color-background);
-            color: var(--md-sys-color-on-surface);
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
             margin: 0;
-            padding: 16px;
+            padding: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
         }
-
-        .container {
-            background: var(--md-sys-color-surface);
+        
+        #app {
             width: 100%;
-            max-width: 720px;
-            padding: 32px;
-            border-radius: var(--md-shape-corner-large);
-            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
-            box-sizing: border-box;
-        }
-
-        h1, h2 {
-            color: var(--md-sys-color-on-surface);
-            text-align: center;
-            font-weight: 500;
-            margin-top: 0;
-        }
-
-        h1 {
-            font-size: 26px;
-            color: var(--md-sys-color-primary);
-            margin-bottom: 24px;
-        }
-
-        .stats-card {
-            background-color: #f1f3f4;
+            max-width: 800px;
             padding: 20px;
-            border-radius: var(--md-shape-corner-medium);
-            margin-bottom: 24px;
-            text-align: center;
-            font-size: 15px;
-            line-height: 1.6;
+            box-sizing: border-box;
+            min-height: 100vh;
         }
-
+        
+        .view {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            background: var(--surface-color);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 6px rgba(60,64,67,0.15);
+            margin-bottom: 24px;
+        }
+        
+        h1, h2 {
+            margin-top: 0;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
+        }
+        
+        .stat-box {
+            background: #f1f3f4;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
         .btn {
-            background-color: var(--md-sys-color-primary);
-            color: var(--md-sys-color-on-primary);
+            background-color: var(--primary-color);
+            color: white;
             border: none;
             padding: 12px 24px;
             border-radius: 24px;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            width: 100%;
-            margin-top: 12px;
-            transition: background-color 0.2s, box-shadow 0.2s;
-            box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+            transition: background-color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px;
         }
-
+        
         .btn:hover {
-            background-color: #1557b0;
-            box-shadow: 0 1px 3px 1px rgba(60,64,67,0.3);
+            background-color: var(--primary-hover);
         }
-
-        .btn-secondary {
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-outline:hover {
             background-color: #f1f3f4;
-            color: #3c4043;
-            box-shadow: none;
         }
-        .btn-secondary:hover {
-            background-color: #e8eaed;
-        }
-
+        
         .btn-danger {
-            background-color: #fce8e6;
-            color: var(--md-sys-color-error);
-            box-shadow: none;
+            color: var(--error-text);
+            background-color: transparent;
         }
         .btn-danger:hover {
-            background-color: #fad2cf;
+            background-color: var(--error-bg);
         }
-
-        .menu-screen, .quiz-screen, .result-screen {
-            display: none;
-        }
-
-        .active {
-            display: block;
-        }
-
-        .option-label {
-            display: flex;
-            align-items: flex-start;
-            background: #ffffff;
-            border: 2px solid var(--md-sys-color-outline);
-            padding: 14px 16px;
-            border-radius: var(--md-shape-corner-medium);
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 15px;
-            line-height: 1.4;
-        }
-
-        .option-label:hover {
-            background: #f8f9fa;
-            border-color: #bdc1c6;
-        }
-
-        .option-label input {
-            margin-top: 2px;
-            margin-right: 14px;
-            transform: scale(1.3);
-            accent-color: var(--md-sys-color-primary);
-            cursor: pointer;
-        }
-
-        /* Auswertungs-Stile direkt an den Optionen nach dem Absenden */
-        .option-label.correct-answer {
-            background-color: var(--md-sys-color-success-container) !important;
-            border-color: var(--md-sys-color-success) !important;
-            color: var(--md-sys-color-success);
-            font-weight: 500;
-        }
-
-        .option-label.incorrect-answer {
-            background-color: var(--md-sys-color-error-container) !important;
-            border-color: var(--md-sys-color-error) !important;
-            color: var(--md-sys-color-error);
-            font-weight: 500;
-        }
-
+        
+        /* Quiz View */
         .quiz-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
-            font-size: 14px;
-            color: #5f6368;
-            font-weight: 500;
         }
-
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e8eaed;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
         .question-text {
-            font-weight: 500;
             font-size: 18px;
-            margin-bottom: 20px;
             line-height: 1.5;
-        }
-
-        .feedback-banner {
-            margin-top: 16px;
-            padding: 14px;
-            border-radius: var(--md-shape-corner-medium);
+            margin-bottom: 24px;
             font-weight: 500;
-            text-align: center;
+        }
+        
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover:not(.disabled) {
+            background-color: #f8f9fa;
+        }
+        
+        .option.selected {
+            border-color: var(--primary-color);
+            background-color: #e8f0fe;
+        }
+        
+        .option.correct {
+            border-color: var(--success-text);
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+        
+        .option.incorrect {
+            border-color: var(--error-text);
+            background-color: var(--error-bg);
+            color: var(--error-text);
+        }
+        
+        .option.disabled {
+            cursor: default;
+        }
+        
+        .option-icon {
+            margin-right: 12px;
+            font-family: 'Material Icons';
+            font-size: 24px;
+        }
+        
+        .action-buttons {
+            margin-top: 32px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .feedback {
+            margin-top: 16px;
+            font-weight: 500;
+            font-size: 16px;
             display: none;
-            font-size: 15px;
+            padding: 12px;
+            border-radius: 8px;
         }
-
-        .feedback-banner.correct {
-            background: var(--md-sys-color-success-container);
-            color: var(--md-sys-color-success);
+        .feedback.success {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            display: block;
+        }
+        .feedback.error {
+            background-color: var(--error-bg);
+            color: var(--error-text);
             display: block;
         }
 
-        .feedback-banner.incorrect {
-            background: var(--md-sys-color-error-container);
-            color: var(--md-sys-color-error);
-            display: block;
-        }
-
-        .settings-row {
+        /* End View */
+        .result-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px 0;
-            font-size: 15px;
-            cursor: pointer;
-            user-select: none;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 auto 24px;
         }
 
-        .settings-row input {
-            transform: scale(1.3);
-            margin-right: 10px;
-            accent-color: var(--md-sys-color-primary);
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 8px;
-            }
-            .container {
-                padding: 20px;
-            }
+        .flex-center {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
         }
     </style>
 </head>
 <body>
+    <div id="app">
+        <!-- Start Menu -->
+        <div id="view-start" class="view active">
+            <div class="card" style="text-align: center;">
+                <h1>Psychologie Quiz</h1>
+                <p style="color: var(--text-secondary);">Grundlagen des Lernens & Lehrens</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-tests">0</div>
+                        <div class="stat-label">Absolvierte Tests</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-correct">0</div>
+                        <div class="stat-label">Fragen Richtig</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="stat-wrong">0</div>
+                        <div class="stat-label">Fragen Falsch</div>
+                    </div>
+                </div>
 
-<div class="container">
-    <!-- STARTSEITE / HAUPTMENÜ -->
-    <div id="menuScreen" class="menu-screen active">
-        <h1>Psychologische Grundlagen</h1>
-        <div class="stats-card" id="statsBox">
-            Statistik wird geladen...
+                <div class="flex-center">
+                    <button class="btn" onclick="startQuiz('chrono')">
+                        <span class="material-icons">play_arrow</span> Chronologisch (1-61)
+                    </button>
+                    <button class="btn btn-outline" onclick="startQuiz('random')">
+                        <span class="material-icons">shuffle</span> Zufällige Reihenfolge
+                    </button>
+                </div>
+                <div style="margin-top: 16px;">
+                    <button class="btn btn-outline btn-danger" onclick="resetStats()" style="font-size: 14px; padding: 8px 16px;">
+                        Statistiken zurücksetzen
+                    </button>
+                </div>
+            </div>
         </div>
-        
-        <label class="settings-row">
-            <input type="checkbox" id="randomizeCheck"> Fragen in zufälliger Reihenfolge
-        </label>
 
-        <button class="btn" onclick="startQuiz('all')">Komplettes Quiz starten (1–61)</button>
-        <button class="btn btn-secondary" id="repeatFalseBtn" onclick="startQuiz('falseOnly')" style="display:none;">Nur falsche Fragen wiederholen</button>
-        <button class="btn btn-danger" onclick="resetStats()" style="margin-top: 8px;">Statistik zurücksetzen</button>
-    </div>
+        <!-- Quiz View -->
+        <div id="view-quiz" class="view">
+            <div class="card">
+                <div class="quiz-header">
+                    <span id="quiz-progress-text" style="font-weight: 500; color: var(--text-secondary);">Frage 1 von 61</span>
+                    <button class="btn btn-outline btn-danger" onclick="abortQuiz()" style="padding: 6px 12px; margin:0;">
+                        <span class="material-icons" style="font-size: 18px;">close</span> Abbrechen
+                    </button>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="quiz-progress-bar" class="progress-bar"></div>
+                </div>
+                
+                <div id="question-container">
+                    <div id="question-text" class="question-text"></div>
+                    <div id="options-container" class="options-list"></div>
+                </div>
+                
+                <div id="feedback-msg" class="feedback"></div>
 
-    <!-- QUIZ-BILDSCHIRM -->
-    <div id="quizScreen" class="quiz-screen">
-        <div class="quiz-header">
-            <span id="questionProgress">Frage X von Y</span>
-            <button class="btn btn-danger" style="width: auto; padding: 6px 14px; margin: 0; font-size: 13px;" onclick="abortQuiz()">Quiz abbrechen</button>
+                <div class="action-buttons">
+                    <div></div>
+                    <button id="btn-check" class="btn" onclick="checkAnswer()">Überprüfen</button>
+                    <button id="btn-next" class="btn" onclick="nextQuestion()" style="display: none;">
+                        Nächste Frage <span class="material-icons">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
         </div>
-        
-        <div class="question-text" id="questionText">Fragetext kommt hier...</div>
-        <div id="optionsContainer"></div>
-        
-        <div id="feedbackBox" class="feedback-banner"></div>
 
-        <button class="btn" id="submitBtn" onclick="submitAnswer()">Antwort überprüfen</button>
-        <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display:none;">Nächste Frage</button>
+        <!-- End View -->
+        <div id="view-end" class="view">
+            <div class="card" style="text-align: center;">
+                <h2>Quiz Beendet!</h2>
+                <div id="result-circle" class="result-circle">0/0</div>
+                <p id="result-text" style="font-size: 18px; margin-bottom: 32px;"></p>
+                
+                <div class="flex-center">
+                    <button class="btn btn-outline" onclick="showStartMenu()">
+                        <span class="material-icons">home</span> Zurück zum Menü
+                    </button>
+                    <button id="btn-retry" class="btn" onclick="startQuiz('retry')" style="display: none;">
+                        <span class="material-icons">replay</span> Falsche wiederholen
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- ERGEBNIS-BILDSCHIRM -->
-    <div id="resultScreen" class="result-screen">
-        <h1>Durchgang beendet!</h1>
-        <div class="stats-card" id="resultStatsBox"></div>
+    <script>
+        const allQuestions = [];
         
-        <button class="btn" onclick="startQuiz('all')">Gesamtes Quiz wiederholen</button>
-        <button class="btn btn-secondary" id="resultRepeatFalseBtn" onclick="startQuiz('falseOnly')">Nur falsche Fragen wiederholen</button>
-        <button class="btn btn-secondary" onclick="goToMenu()" style="margin-top: 8px;">Zurück zur Startseite</button>
-    </div>
-</div>
-
-<script>
-    const questionsData = [
-        {
-            id: 1,
-            text: "Welche Phänomene beschreiben sogenannte Genom-Umwelt-Korrelationen?",
-            options: [
-                { text: "Individuen erhalten neben ihren genetischen Anlagen auch die dazu passende Umwelt von ihren Eltern.", correct: false },
-                { text: "Der Einfluss des Genoms ist von Umweltbedingungen abhängig.", correct: true },
-                { text: "Der Einfluss der Umweltbedingungen ist vom Genom abhängig.", correct: true },
-                { text: "Individuen wählen, schaffen oder verändern Umwelten, die zu ihrer genetischen Ausstattung passen.", correct: true },
-                { text: "Individuen rufen aufgrund ihres Genoms bestimmte Reaktionen ihrer sozialen Umwelt hervor.", correct: true }
-            ]
-        },
-        {
-            id: 2,
-            text: "Aus welchen Gründen spielt die Theorie der klassischen Konditionierung für schulische Lernprozesse eine untergeordnete Rolle?",
-            options: [
-                { text: "Im Fokus der klassischen Konditionierung stehen Verhaltensweisen, die auf Reflexen basieren.", correct: true },
-                { text: "Die klassische Konditionierung kann erklären, wie neue Verhaltensweisen gelernt werden.", correct: false },
-                { text: "Die klassische Konditionierung geht davon aus, dass es keine individuellen Unterschiede im Lernen gibt.", correct: true },
-                { text: "Kognitive Prozesse spielen in der klassischen Konditionierung keine Rolle.", correct: true },
-                { text: "Selbstreguliertes Lernen dürfte laut klassischer Konditionierung nicht geben.", correct: true }
-            ]
-        },
-        {
-            id: 3,
-            text: "Welche Aspekte beeinflussen, wie gut ein Schüler bzw. eine Schülerin selbstreguliert lernen kann?",
-            options: [
-                { text: "Welche kognitiven Lernstrategien er bzw. sie kennt.", correct: true },
-                { text: "Wie motiviert er bzw. sie ist.", correct: true },
-                { text: "Wie intelligent er bzw. sie ist.", correct: false },
-                { text: "Welche metakognitiven Lernstrategien er bzw. sie kennt.", correct: true },
-                { text: "Wie viel Vorwissen er bzw. sie hat.", correct: true }
-            ]
-        },
-        {
-            id: 4,
-            text: "Welcher Teilbereich der Psychologie beschäftigt sich damit, wie Menschen neue Informationen verarbeiten und speichern?",
-            options: [
-                { text: "Allgemeine Psychologie", correct: true }
-            ]
-        },
-        {
-            id: 5,
-            text: "Welche Aussagen über Intelligenz sind richtig?",
-            options: [
-                { text: "Die Erblichkeit von Intelligenz steigt mit dem Alter.", correct: false },
-                { text: "Hochbegabte Menschen unterscheiden sich in ihrer Intelligenz grundlegend von anderen Menschen.", correct: false },
-                { text: "Die Krystalline Intelligenz bezieht sich auf die erworbenen Fähigkeiten einer Person.", correct: true },
-                { text: "Man geht von der Existenz einer allgemeinen Intelligenz aus, die bei der Bearbeitung aller Intelligenzaufgaben eine Rolle spielt.", correct: true },
-                { text: "Die Intelligenz einer Person ist nicht durch die Umwelt veränderbar.", correct: false }
-            ]
-        },
-        {
-            id: 6,
-            text: "Welcher der folgenden Prozesse zählt NICHT zu den wichtigsten Prozessen der Gehirnentwicklung?",
-            options: [
-                { text: "Die Bildung von neuen Neuronen.", correct: false },
-                { text: "Die Myelinisierung von Neuronen.", correct: false },
-                { text: "Das Absterben von Synapsen.", correct: false },
-                { text: "Das Absterben von Neuronen.", correct: true },
-                { text: "Die Bildung von neuen Synapsen.", correct: false }
-            ]
-        },
-        {
-            id: 7,
-            text: "Welchem System gehören in Bronfenbrenners Systemtheorie die Mitschülerinnen und Mitschülern einer Schülerin bzw. eines Schülers an?",
-            options: [
-                { text: "Makrosystem", correct: false },
-                { text: "Exosystem", correct: false },
-                { text: "Chronosystem", correct: false },
-                { text: "Mikrosystem", correct: true },
-                { text: "Mesosystem", correct: false }
-            ]
-        },
-        {
-            id: 8,
-            text: "Welche der folgenden Entwicklungstheorien gehen NICHT von einer aktiven Rolle der Umwelt für die Entwicklung von Menschen aus?",
-            options: [
-                { text: "Individualistische Entwicklungstheorien", correct: false },
-                { text: "Endogenistische Entwicklungstheorien", correct: true },
-                { text: "Transaktionale Entwicklungstheorien", correct: false },
-                { text: "Exogenistische Entwicklungstheorien", correct: false },
-                { text: "Aktionale Entwicklungstheorien", correct: true }
-            ]
-        },
-        {
-            id: 9,
-            text: "Bei welchen der genannten Störungen handelt es sich um internalisierende Störungen?",
-            options: [
-                { text: "Rechenstörung", correct: false },
-                { text: "Störung des Sozialverhaltens", correct: false },
-                { text: "Angststörung", correct: true },
-                { text: "Depressionen", correct: true },
-                { text: "Aufmerksamkeits-Defizit-Hyperaktivitäts-Störung", correct: false }
-            ]
-        },
-        {
-            id: 10,
-            text: "Welche Aussagen über Entwicklungsaufgaben sind FALSCH?",
-            options: [
-                { text: "Die individuellen Zielsetzungen einer Person können eine Quelle von Entwicklungsaufgaben darstellen.", correct: false },
-                { text: "Biologische Veränderungen sind eine mögliche Quelle für Entwicklungsaufgaben.", correct: false },
-                { text: "Entwicklungsaufgaben lassen sich auch als nicht-normative Lebensereignisse konceptualisieren.", correct: true },
-                { text: "Entwicklungsaufgaben können durch gesellschaftliche Erwartungen entstehen.", correct: false },
-                { text: "Entwicklungsaufgaben sind Aufgaben, die im Jugendalter an das Individuum gestellt werden.", correct: true }
-            ]
-        },
-        {
-            id: 11,
-            text: "Welches Merkmal von Schüler:Innen ist KEINE unmittelbare Voraussetzung für selbstreguliertes Lernen?",
-            options: [
-                { text: "Motivation", correct: false },
-                { text: "Metakognition", correct: false },
-                { text: "Vorwissen", correct: false },
-                { text: "Emotionen", correct: false },
-                { text: "Selbstbewusstsein", correct: true }
-            ]
-        },
-        {
-            id: 12,
-            text: "Welche Aussagen über die Heritabilität eines Merkmals sind richtig?",
-            options: [
-                { text: "Die Heritabilität kann für einzelne Individuen bestimmt werden.", correct: false },
-                { text: "Die Heritabilität kann nur geschätzt werden.", correct: true },
-                { text: "Die Heritabilität gibt den relativen Einfluss von Genom und Umwelt auf ein Merkmal an.", correct: true },
-                { text: "Die Heritabilität kann zwischen 0 und 1 variieren.", correct: true },
-                { text: "Die Heritabilität eines Merkmals ist in verschiedenen Populationen gleich.", correct: false }
-            ]
-        },
-        {
-            id: 13,
-            text: "Welche Aussagen zum Expertiseerwerb sind korrekt?",
-            options: [
-                { text: "Expertise wird immer im Hinblick auf einen bestimmten Wissensbereich erworben.", correct: true },
-                { text: "Expertise kann als eine Art Problemlösen verstanden werden.", correct: true },
-                { text: "Beim Erwerb von Expertise muss Wissen organisiert werden.", correct: true },
-                { text: "Beim Erwerb von Expertise ist sehr viel Routinewissen notwendig.", correct: true },
-                { text: "Der Erwerb von Expertise ist mit viel Übung verbunden.", correct: true }
-            ]
-        },
-        {
-            id: 14,
-            text: "Welche Aussagen über soziale Kategorisierung sind FALSCH?",
-            options: [
-                { text: "Soziale Kategorisierung ist die sozialpsychologische Bezeichnung für Vorurteil", correct: true },
-                { text: "Soziale Kategorisierungen gehen mit der Zuschreibung bestimmter Eigenschaften einher.", correct: false },
-                { text: "Soziale Kategorisierungen ermöglichen eine effiziente Informationsverarbeitung.", correct: false },
-                { text: "Menschen unterscheiden zwischen Eigengruppen und Fremdgruppen", correct: false },
-                { text: "Menschen teilen sich und ihre soziale Umwelt nach wohlüberlegten Kriterien in Gruppen ein.", correct: true }
-            ]
-        },
-        {
-            id: 15,
-            text: "Welche Aussagen über Entwicklung entsprechen dem modernen Entwicklungsbegriff?",
-            options: [
-                { text: "Entwicklung erfolgt in einer unveränderlichen Abfolge von Phasen oder Stufen.", correct: false },
-                { text: "Entwicklung meint Veränderungen hin zu einem positiven Endzustand.", correct: false },
-                { text: "Die Umwelt beeinflusst die Entwicklung von Menschen.", correct: true },
-                { text: "Entwicklung findet über die gesamte Lebensspanne statt.", correct: true },
-                { text: "Menschen sind aktive Gestalter ihrer Entwicklung.", correct: true }
-            ]
-        },
-        {
-            id: 16,
-            text: "Welche Aussagen über den Einfluss von Emotionen auf den Wissenserwerb sind RICHTIG?",
-            options: [
-                { text: "Emotionen beeinflussen die Speicherung von Informationen aus dem Langzeitgedächtnis.", correct: false },
-                { text: "Emotionen beeinflussen die Funktionsweise des Arbeitsgedächtnisses.", correct: true },
-                { text: "Positive Emotionen binden mehr kognitive Ressourcen als negative Emotionen.", correct: false },
-                { text: "Emotionen beeinflussen den Abruf von Informationen aus dem Langzeitgedächtnis.", correct: true },
-                { text: "Negative Emotionen haben immer negative Konsequenzen für den Wissenserwerb.", correct: false }
-            ]
-        },
-        {
-            id: 17,
-            text: "Welche Verhaltensweisen einer Lehrkraft eignen sich um im Unterricht eine symmetrische Kommunikation mit den Schüler:Innen zu erreichen?",
-            options: [
-                { text: "Genau zuhören.", correct: true },
-                { text: "Bestrafen bei Regelverletzung", correct: false },
-                { text: "Lob erteilen.", correct: false },
-                { text: "Raum für eigene Beiträge von Schüler:Innen geben.", correct: true },
-                { text: "Ermöglichen von selbstreguliertem Lernen der Schüler:Innen", correct: true }
-            ]
-        },
-        {
-            id: 18,
-            text: "Welche der folgenden Aussagen zum Arbeitszeitgedächtnis sind FALSCH?",
-            options: [
-                { text: "Das Arbeitszeitgedächtnis bezieht seine Informationen aus dem sensorischen Register.", correct: false },
-                { text: "Das Arbeitszeitgedächtnis bezieht seine Informationen aus dem Langzeitgedächtnis.", correct: false },
-                { text: "Die Speicherdauer des Arbeitsgedächtnisses beträgt wenige Stunden.", correct: true },
-                { text: "Die Speicherkapazität des Arbeitsgedächtnisses ist unbegrenzt.", correct: true },
-                { text: "Durch das sogenannte Chunking kann die Speicherkapazität des Arbeitsgedächtnisses besser genutzt werden.", correct: false }
-            ]
-        },
-        {
-            id: 19,
-            text: "Welche Aussagen über die neuronale Plastizität sind RICHTIG?",
-            options: [
-                { text: "Es gibt Phasen, in denen das Gehirn besonders empfänglich für bestimmte Erfahrungen ist.", correct: true },
-                { text: "Axone können sich durch Erfahrungen verlängern.", correct: true },
-                { text: "Durch Erfahrungen kann die Effizienz der neuronalen Informationsverarbeitung verändert werden.", correct: true },
-                { text: "Erfahrungen können zum Abbau von Synapsen führen.", correct: true },
-                { text: "Veränderungen des Gehirns finden nur im Kindes- und Jugendalter statt.", correct: false }
-            ]
-        },
-        {
-            id: 20,
-            text: "Bei welchem Aspekt handelt es sich um KEINE Bedingung für einen erfolgreichen Intergruppenkontakt?",
-            options: [
-                { text: "Eigen- und Fremdgruppen sollten miteinander kooperieren müssen.", correct: false },
-                { text: "Eigen- und Fremdgruppen sollten gemeinsame Ziele verfolgen.", correct: false },
-                { text: "Der Kontakt zwischen Eigen- und Fremdgruppen wird durch Autoritäten, Normen und Gesetze unterstützt.", correct: false },
-                { text: "Eigen- und Fremdgruppen sollten den gleichen Status haben.", correct: false },
-                { text: "Es muss zu einem realen Kontakt zwischen Eigen- und Fremdgruppen kommen.", correct: true }
-            ]
-        },
-        {
-            id: 21,
-            text: "Welche Aussagen zu den grundlegenden Prinzipien der Genetik sind FALSCH?",
-            options: [
-                { text: "Änderungen im epigenetischen Programm führen zu Änderungen des Genoms.", correct: false },
-                { text: "Die Genaktivität verändert sich im Laufe der Entwicklung eines Menschen.", correct: false },
-                { text: "Genetische Wirkungen folgen im Laufe des Lebens einem kumulativen Prinzip.", correct: false },
-                { text: "Das epigenetische Programm kann auch an Nachkommen eines Organismus vererbt werden.", correct: false },
-                { text: "Der genetische Einfluss auf die Entwicklung ist bei Geburt festgelegt.", correct: true }
-            ]
-        },
-        {
-            id: 22,
-            text: "Welche der folgenden Aktivitäten von Schüler:Innen zählen zu den Kognitionen?",
-            options: [
-                { text: "Wahrnehmen eines Tafelbildes.", correct: true },
-                { text: "Lösen einer Mathematikaufgabe.", correct: true },
-                { text: "Sich zur Bearbeitung der Hausaufgaben motivieren.", correct: false },
-                { text: "Trösten eines Mitschülers oder einer Mitschülerin.", correct: false },
-                { text: "Erinnern an die letzte Deutschstunde.", correct: true }
-            ]
-        },
-        {
-            id: 23,
-            text: "Welche Phasen gehören NICHT zum Beobachtungslernen?",
-            options: [
-                { text: "Löschungsphase", correct: true },
-                { text: "Verstärkungsphase", correct: true },
-                { text: "Motivationsphase", correct: false },
-                { text: "Nachbildungsphase", correct: false },
-                { text: "Aufmerksamkeitsphase", correct: false }
-            ]
-        },
-        {
-            id: 24,
-            text: "Welche Aussagen zum selbstregulierten Lernen sind FALSCH?",
-            options: [
-                { text: "Die Förderung des selbstregulierten Lernens sollte unabhängig von spezifischen Fächern erfolgen.", correct: false },
-                { text: "Lehrkräfte sollten ihren Schüler:Innen unterschiedliche Lernstrategien beibringen.", correct: false },
-                { text: "Schüler:Innen müssen sich ihrer Lernziele bewusst sein.", correct: false },
-                { text: "Unterstützungsmaßnahmen durch die Lehrkräfte sollten beim selbstregulierten Lernen vermieden werden.", correct: true },
-                { text: "Selbstreguliertes Lernen lässt sich als ein interaktiver Prozess verstehen.", correct: false }
-            ]
-        },
-        {
-            id: 25,
-            text: "Welche Aussagen über Big-Fish-Little-Pond-Effekt sind richtig?",
-            options: [
-                { text: "Das Fähigkeitsselbstkonzept eines Schülers bzw. Schülerin ist unabhängig vom Leistungsniveau der Klasse.", correct: false },
-                { text: "In einer leistungsstarken Klasse führen Aufwärtsvergleiche mit anderen Schüler:Innen zu einem niedrigen Fähigkeitsselbstkonzept.", correct: true },
-                { text: "Nach dem Wechsel von der Grundschule auf die weiterführende Schule kommt es in der Regel zu großen Veränderungen im Fähigkeitsselbstkonzept von Schüler:Innen.", correct: true },
-                { text: "Abwärtsvergleiche mit anderen Schüler:Innen führen in der Regel zu einem höheren Fähigkeitsselbstkonzept.", correct: true },
-                { text: "Schüler:Innen in leistungsstarken Klassen haben ein höheres Fähigkeitsselbstkonzept als Schüler:Innen in leistungsschwachen Klassen.", correct: false }
-            ]
-        },
-        {
-            id: 26,
-            text: "Welche Phänomene im schulischen Kontext NICHT mit der Theorie des Stereotype Threat erklärt werden?",
-            options: [
-                { text: "Schüler:Innen einer sozialen Gruppe haben Angst, ihr Verhalten könnte ein negatives Stereotyp gegen ihre Gruppe bestätigen.", correct: false },
-                { text: "Bestimmte Merkmale von Schüler:Innen aktivieren Stereotype bei ihren Lehrkräften.", correct: true },
-                { text: "Schüler:Innen einer sozialen Gruppe verhalten sich entsprechend des Stereotyps im Sinne einer sich selbsterfüllenden Prophezeiung", correct: false },
-                { text: "Schüler:Innen unterschiedlicher sozialer Gruppen bedrohen sich aufgrund der Stereotype, die sie übereinander haben.", correct: true },
-                { text: "Die Stereotype von Lehrkräften gegenüber bestimmten Schüler:Innen führen zu einem unterschiedlichen Verhalten ihnen gegenüber.", correct: true }
-            ]
-        },
-        {
-            id: 27,
-            text: "Welche Aussagen über psychologische Prozesse in sozialen Gruppen treffen zu?",
-            options: [
-                { text: "Je niedriger die Kohäsion einer Gruppe, desto bedeutsamer werden die Normen und Werte der Gruppe für die einzelnen Mitglieder der Gruppe.", correct: false },
-                { text: "In sozialen Gruppen dienen Normen der Orientierung und der Koordination des Verhaltens der Mitglieder.", correct: true },
-                { text: "In sozialen Gruppen streben Personen nach Uniformität.", correct: true },
-                { text: "Damit die Mitglieder einer sozialen Gruppe einen Einfluss auf das Verhalten einer Person haben können, müssen sie physisch anwesend sein.", correct: false },
-                { text: "Wenn die individuelle Leistung nicht messbar ist, neigen Personen in sozialen Gruppen dazu, die individuelle Leistung zu reduzieren.", correct: true }
-            ]
-        },
-        {
-            id: 28,
-            text: "Wovon ist das Fähigkeitskonzept im Fach Deutsch von Schülerinnen und Schülern NICHT beeinflusst?",
-            options: [
-                { text: "Den Leistungen der MitschülerInnen im Fach Deutsch.", correct: false },
-                { text: "Den eigenen Leistungen im Fach Deutsch zu einem früheren Zeitpunkt.", correct: false },
-                { text: "Den eigenen Leistungen in einem anderen Fach, z.B. in Mathematik.", correct: false },
-                { text: "Den eigenen Leistungen im Fach Deutsch.", correct: false },
-                { text: "Den Leistungen von Schülerinnen und Schülern einer anderen Schule im Fach Deutsch.", correct: true }
-            ]
-        },
-        {
-            id: 29,
-            text: "Welche Aussage über das Gedächtnis ist korrekt?",
-            options: [
-                { text: "Inhalte des prozeduralen Gedächtnis können wir verbalisieren.", correct: false },
-                { text: "Lernergebnisse einer klassischen Konditionierung sind im impliziten Gedächtnis gespeichert.", correct: true },
-                { text: "Autobiographische Erinnerungen werden im semantischen Gedächtnis gespeichert.", correct: false },
-                { text: "Fertigkeiten und Gewohnheiten werden im deklarativen Gedächtnis gespeichert.", correct: false },
-                { text: "Die Inhalte dieser Vorlesung sind im episodischen Gedächtnis gespeichert.", correct: false }
-            ]
-        },
-        {
-            id: 30,
-            text: "Wodurch wird das Erinnern von Informationen positiv beeinflusst?",
-            options: [
-                { text: "Geballtes Wiederholen der Informationen", correct: false },
-                { text: "Ein hoher Grad kognitiver Aktivierung beim Lernen der Informationen.", correct: true },
-                { text: "Positive Emotionen beim Abrufen der Informationen.", correct: false },
-                { text: "Das Vorhandensein von Hinweisreizen beim Erinnern der Informationen.", correct: true },
-                { text: "Häufiges und verteiltes Wiederholen der Informationen.", correct: true }
-            ]
-        },
-        {
-            id: 31,
-            text: "Welche Gedächtnisstrukturen sind NICHT dem Langzeitgedächtnis zugeordnet?",
-            options: [
-                { text: "Echoisches Gedächtnis", correct: true },
-                { text: "Semantisches Gedächtnis", correct: false },
-                { text: "Deklaratives Gedächtnis", correct: false },
-                { text: "Implizites Gedächtnis", correct: false },
-                { text: "Ikonisches Gedächtnis", correct: true }
-            ]
-        },
-        {
-            id: 32,
-            text: "Welche Symptome treten nur bei einer Depression, nicht aber bei einer Aufmerksamkeits-Defizit-Hyperaktivitäts-Störung auf?",
-            options: [
-                { text: "Konzentrationsprobleme", correct: false },
-                { text: "Verlust an Freude und Interesse", correct: true },
-                { text: "Impulsivität", correct: false },
-                { text: "Antriebslosigkeit", correct: true },
-                { text: "Gedrückte Stimmung", correct: true }
-            ]
-        },
-        {
-            id: 33,
-            text: "Welche Aussagen über die Bedingungen des Wissenserwerbs sind richtig?",
-            options: [
-                { text: "Durch das Verwenden von Beispielen kann der Wissenserwerb gefördert werden.", correct: true },
-                { text: "Motivationen spielen für den kognitiven Wissenserwerb keine Rolle", correct: false },
-                { text: "Bei einer Überlastung des Arbeitsgedächtnisses ist der Wissenserwerb beeinträchtigt.", correct: true },
-                { text: "Neues Wissen muss im Langzeitgedächtnis konsolidiert werden.", correct: true },
-                { text: "Das Vorwissen hat keine Bedeutung für den Erwerb von neuem Wissen.", correct: false }
-            ]
-        },
-        {
-            id: 34,
-            text: "Bei welchen der folgenden Emotionen handelt es sich NICHT um Basisemotionen?",
-            options: [
-                { text: "Überraschung", correct: false },
-                { text: "Wut", correct: false },
-                { text: "Stolz", correct: true },
-                { text: "Scham", correct: true },
-                { text: "Ekel", correct: false }
-            ]
-        },
-        {
-            id: 35,
-            text: "Welche Aussagen über exekutive Funktionen sind FALSCH?",
-            options: [
-                { text: "Kognitive Flexibilität und inhibitorische Kontrolle zählen zu den zentralen Fähigkeiten von exekutiven Funktionen.", correct: false },
-                { text: "Kinder mit gut ausgeprägten exekutiven Funktionen lassen sich nicht leicht von ihren Aufgaben ablenken.", correct: false },
-                { text: "Gut ausgeprägte exekutive Funktionen erleichtern das selbstregulierte Lernen.", correct: false },
-                { text: "Kinder mit gut ausgeprägten exekutiven Funktionen haben ein hohes akademisches Selbstkonzept.", correct: false },
-                { text: "Das Arbeitsgedächtnis spielt für exekutive Funktionen keine Rolle.", correct: true }
-            ]
-        },
-        {
-            id: 36,
-            text: "Welche Aussagen über das Verhältnis von Intelligenz und Wissenserwerb in einem Schulfach sind FALSCH?",
-            options: [
-                { text: "Fachspezifisches Vorwissen hat einen größeren Einfluss auf den Wissenserwerb in einem Fach als Intelligenz.", correct: false },
-                { text: "Fachspezifisches Wissen ist durch eine hohe Intelligenz kompensierbar.", correct: true },
-                { text: "Eine hohe Intelligenz kann Defizite im fachspezifischen Wissen nicht kompensieren.", correct: false },
-                { text: "Die Bedeutung von Intelligenz für den Wissenserwerb nimmt im Laufe der Schulzeit zu.", correct: true },
-                { text: "Fachspezifisches Wissen kann Intelligenzdefizite kompensieren.", correct: false }
-            ]
-        },
-        {
-            id: 37,
-            text: "Welche Aussagen über die Aufmerksamkeit-Defizit-Hyperaktivitäts-Störung sind RICHTIG?",
-            options: [
-                { text: "Für die Diagnose von ADHS sollten standardisierte Testverfahren eingesetzt werden.", correct: false },
-                { text: "ADHS ist zu einem großen Anteil genetisch bedingt", correct: true },
-                { text: "Die Anzahl von Schülerinnen mit ADHS ist in den letzten Jahren gestiegen.", correct: false },
-                { text: "ADHS ist eine Krankheit, die vor allem bei Kindern und Jugendlichen auftritt.", correct: true },
-                { text: "Mediale Reizüberflutung trägt nicht zum Entstehen von ADHS bei.", correct: true }
-            ]
-        },
-        {
-            id: 38,
-            text: "Welche Gehirnstruktur spielt eine zentrale Rolle, wenn ein Kind laufen lernt?",
-            options: [
-                { text: "Limbisches System", correct: false },
-                { text: "Kleinhirn", correct: true },
-                { text: "Zwischenhirn", correct: false },
-                { text: "Großhirnrinde", correct: false },
-                { text: "Hirnstamm", correct: false }
-            ]
-        },
-        {
-            id: 39,
-            text: "Welche Aussagen über behavioristische Lerntheorien sind FALSCH?",
-            options: [
-                { text: "Behavioristische Lerntheorien betonen, dass Menschen sehr unterschiedlich lernen.", correct: true },
-                { text: "Behavioristische Lerntheorien fokussieren Veränderungen im Verhalten von Menschen.", correct: false },
-                { text: "Behavioristische Lerntheorien gehen davon aus, dass Lernen ein aktiver Prozess ist.", correct: true },
-                { text: "Behavioristische Lerntheorien verstehen Lernen als Informationsverarbeitung.", correct: true },
-                { text: "Behavioristische Lerntheorien beschäftigen sich nicht mit mentalen Prozessen von Menschen.", correct: false }
-            ]
-        },
-        {
-            id: 40,
-            text: "Warum begünstigt das Erstellen von Mind-Maps den Wissenserwerb? (Single Choice)",
-            options: [
-                { text: "Weil hier wie bei einem Schema Informationen über spezifische, häufig auftretende Situationen gespeichert werden.", correct: false },
-                { text: "Weil hier wie bei einem Skript Informationen über Abläufe von Handlungen oder Ereignissen gespeichert werden.", correct: false },
-                { text: "Weil hier Propositionen, d.h. sprachliche Informationen auf der Bedeutungsebene gespeichert werden.", correct: false },
-                { text: "Weil hier ein mentales Modell der Informationen gespeichert wird.", correct: false },
-                { text: "Weil hier wie bei einem semantischen Netzwerk Informationen nach ihrer kategorialen Zugehörigkeit gespeichert werden.", correct: true }
-            ]
-        },
-        {
-            id: 41,
-            text: "Welcher Identitätszustand ist durch einen hohen Grad an Commitment und durch einen niedrigen Grad an Exploration gekennzeichnet? (Single Choice)",
-            options: [
-                { text: "Konstruktive Identität", correct: false },
-                { text: "Übernommene Identität", correct: true },
-                { text: "Diffuse Identität", correct: false },
-                { text: "Erarbeitete Identität", correct: false },
-                { text: "Moratorium", correct: false }
-            ]
-        },
-        {
-            id: 42,
-            text: "Was gehört zum metakognitiven Wissen von Schülerinnen und Schülern? (Multiple Choice)",
-            options: [
-                { text: "Das Wissen über die eigenen Stärken und Schwächen beim Lernen.", correct: true },
-                { text: "Das Wissen über Lernstrategien.", correct: true },
-                { text: "Das Wissen über Lerninhalte.", correct: false },
-                { text: "Das Wissen über eigene Fehler im Lernprozess.", correct: true },
-                { text: "Das Wissen über das eigene Vorwissen.", correct: true }
-            ]
-        },
-        {
-            id: 43,
-            text: "Welche Verhaltensweisen von Lehrkräften sind Formen der operanten Konditionierung? (Multiple Choice)",
-            options: [
-                { text: "Lob für eine richtige Antwort", correct: true },
-                { text: "Befreiung von Hausaufgaben", correct: true },
-                { text: "Zurechtweisung bei Unterrichtsstörungen", correct: true },
-                { text: "Wegnahme des Handys", correct: true },
-                { text: "Demonstrieren eines Lösungswegs", correct: false }
-            ]
-        },
-        {
-            id: 44,
-            text: "Welche Aussagen über die Entwicklung im Jugendalter sind FALSCH? (Multiple Choice)",
-            options: [
-                { text: "Die noch nicht abgeschlossene Entwicklung des präfrontalen Kortex führt in der Jungend zu Problemen der Impuls- und Handlungskontrolle.", correct: false },
-                { text: "In der Jugend werden überflüssig angelegte Synapsen eliminiert", correct: false },
-                { text: "Das Bedürfnis nach Autonomie in der Jugend steht im Einklang mit den wenig flexiblen schulischen Anforderungen und Vorgaben.", correct: true },
-                { text: "In der Jugend müssen im Vergleich zu anderen Lebensphasen besonders viele Entwicklungsaufgaben bewältigt werden.", correct: false },
-                { text: "Die hormonell gesteuerten körperlichen Veränderungen in der Pubertät sind die zentralen Ursachen für Problemverhalten in der Jugend.", correct: true }
-            ]
-        },
-        {
-            id: 45,
-            text: "Welche Aussagen über den psychologischen Begriff „Lernen“ sind FALSCH? (Multiple Choice)",
-            options: [
-                { text: "Lernen ist ein beobachtbarer Prozess.", correct: true },
-                { text: "Lernen ist ein Prozess der Reifung.", correct: true },
-                { text: "Lernen führt immer zu Änderungen im Verhalten eines Individuums.", correct: true },
-                { text: "Lernen erfolgt durch einen Austausch des Individuums mit seiner Umwelt.", correct: false },
-                { text: "Lernen bezieht sich auf relativ dauerhafte Veränderungen bei einem Individuum.", correct: false }
-            ]
-        },
-        {
-            id: 46,
-            text: "Welche der folgenden Aussagen zu individuellen Unterschieden von Schülerinnen und Schülern ist empirisch NICHT belegt? (Multiple Choice)",
-            options: [
-                { text: "Schülerinnen mit hohen Werten auf der Persönlichkeitseigenschaft „Offenheit für Erfahrungen“ sind in der Schule gesellig und kommunikativ.", correct: true },
-                { text: "Schülerinnen mit einem hohen Fähigkeitsselbstkonzept zeigen bei Schwierigkeiten mehr Ausdauer als SchülerInnen mit einem niedrigen Fähigkeitsselbstkonzept.", correct: false },
-                { text: "Schülerinnen, die gewissenhafter sind, haben im Durchschnitt bessere akademische Leistungen als weniger gewissenhafte Schülerinnen.", correct: false },
-                { text: "SchülerInnen mit einem niedrigen Fähigkeitsselbstkonzept haben bei der Aufgabenbearbeitung mehr handlungsirrelevante Gedanken als Schülerinnen mit einem hohen Fähigkeitsselbstkonzept.", correct: false },
-                { text: "Extravertierte SchülerInnen sind in der Schule besser als introvertierte Schülerinnen.", correct: true }
-            ]
-        },
-        {
-            id: 47,
-            text: "Welche Funktionen können Aufgaben beim schulischen Wissenserwerb haben? (Multiple Choice)",
-            options: [
-                { text: "Verstehen von grundlegenden Prinzipien der Lerninhalte.", correct: true },
-                { text: "Diagnose von Lerndefiziten", correct: true },
-                { text: "Entwicklung von selbstregulativen Fähigkeiten.", correct: false },
-                { text: "Übung und Festigung der Lerninhalte.", correct: true },
-                { text: "Strukturierung der Lerninhalte.", correct: false }
-            ]
-        },
-        {
-            id: 48,
-            text: "Welche Aussagen über menschliche Wahrnehmungs- und Aufmerksamkeitsprozesse sind FALSCH? (Multiple Choice)",
-            options: [
-                { text: "Beim Prozess der Wahrnehmung wird wie bei einem Foto ein mentales Abbild der äußeren Umwelt erstellt.", correct: true },
-                { text: "Interessen und Gefühle eines Menschen spielen beim Prozess der Wahrnehmung keine Rolle.", correct: true },
-                { text: "Die Ausrichtung der Aufmerksamkeit erfolgt auf Basis von Verhaltensabsichten und äußeren Reizbedingungen.", correct: false },
-                { text: "Beim Prozess der Aufmerksamkeit wird ein Großteil äußerer Reize für die bewusste Wahrnehmung herausgefiltert.", correct: false },
-                { text: "Die Wahrnehmung eines Menschen ist durch die Informationen in seinem Langzeitgedächtnis beeinflusst.", correct: false }
-            ]
-        },
-        {
-            id: 49,
-            text: "Was ist das wichtigste und zentralste Definitionsmerkmal einer sozialen Gruppe? (Single Choice)",
-            options: [
-                { text: "Personen müssen sich gegenseitig sympathisch finden", correct: false },
-                { text: "Personen haben eine gemeinsame soziale Identifikation", correct: true },
-                { text: "Personen interagieren miteinander", correct: false },
-                { text: "Personen haben ein gemeinsames Kollektivziel", correct: false },
-                { text: "Personen müssen voneinander abhängig sein", correct: false }
-            ]
-        },
-        {
-            id: 50,
-            text: "Welche Aussage über das Fach Psychologie und ihre Methoden ist FALSCH? (Single Choice)",
-            options: [
-                { text: "In der Psychologie werden wissenschaftliche Erkenntnisse auf der Basis von empirischen Daten gewonnen.", correct: false },
-                { text: "Deskriptive Studien der Psychologie dienen der Erklärung von menschlichem Verhalten und Erleben.", correct: true },
-                { text: "Eine der zentralen Methoden der Psychologie ist das Experiment.", correct: false },
-                { text: "Die Psychologie ist die Wissenschaft vom Verhalten und Erleben des Menschen.", correct: false },
-                { text: "Die Psychologie ist im Vergleich zu den Naturwissenschaften eine relativ junge Wissenschaft.", correct: false }
-            ]
-        },
-        {
-            id: 51,
-            text: "Welche mathematische Kompetenz gehört NICHT zur Kategorie des prozeduralen Wissens? (Single Choice)",
-            options: [
-                { text: "Erkennen eines Quadrats.", correct: true },
-                { text: "Lösen einer Gleichung", correct: false },
-                { text: "Berechnen des Durchschnitts.", correct: false },
-                { text: "Addieren von Zahlen.", correct: false },
-                { text: "Durchführen einer Multiplikation.", correct: false }
-            ]
-        },
-        {
-            id: 52,
-            text: "Welche Aspekte gehören zur psychologischen Definition von Emotion? (Multiple Choice)",
-            options: [
-                { text: "Gesichtsausdruck", correct: false },
-                { text: "Gefühle", correct: true },
-                { text: "Kognitionen", correct: true },
-                { text: "Physiologische Veränderungen", correct: false },
-                { text: "Motivation", correct: true }
-            ]
-        },
-        {
-            id: 53,
-            text: "Eine Schülerin, Anna, arbeitet zuverlässig im Unterricht mit und erledigt immer ihre Hausaufgaben, obwohl sie jede freie Minute mit ihren Freunden und Freundinnen verbringt und in ihrer Klasse als Party-Queen bekannt ist. Welche Persönlichkeitseigenschaften des Big-Five-Modells treffen auf Anna zu? (Multiple Choice)",
-            options: [
-                { text: "Extraversion", correct: true },
-                { text: "Intellektuelle Neugier", correct: false },
-                { text: "Verträglichkeit", correct: false },
-                { text: "Gewissenhaftigkeit", correct: true },
-                { text: "Geselligkeit", correct: true }
-            ]
-        },
-        {
-            id: 54,
-            text: "Bei welchem der folgenden Phänomene, die im Kontext der sozialen Identität von Menschen auftreten, handelt es sich NICHT um Attributionsprozesse? (Multiple Choice)",
-            options: [
-                { text: "Mitglieder der Eigengruppe werden bevorzugt, Mitglieder der Fremdgruppe werden abgewertet oder geschädigt.", correct: true },
-                { text: "Positives Verhalten der Eigengruppe werden bevorzugt und negatives Verhalten der Fremdgruppe wird eher Personenmerkmalen zugeschrieben, negatives Verhalten der Eigengruppe und positives Verhalten der Fremdgruppe eher Situationsmerkmalen.", correct: false },
-                { text: "Informationen werden eher wahrgenommen und abgespeichert, wenn sie mit den eigenen Vorannahmen übereinstimmen.", correct: true },
-                { text: "Mitglieder der Fremdgruppe werden als einander ähnlicher wahrgenommen als Mitglieder der Eigengruppe.", correct: true },
-                { text: "Merkmale einzelner Mitglieder der Fremdgruppe werden auf die gesamte Gruppe übertragen.", correct: true }
-            ]
-        },
-        {
-            id: 55,
-            text: "Stellen Sie sich folgende Situation im Unterricht vor: Die Lehrkraft steht vor der Klasse, macht ein nonverbales Zeichen, die Kinder blicken zur Lehrkraft und wiederholen das Zeichen, die Kinder sind aufmerksam und leise, die Lehrkraft begrüßt die Kinder. Mit welcher Form der Wissensrepräsentation lässt sich erklären, dass die Kinder wissen, was zu tun ist? (Single Choice)",
-            options: [
-                { text: "Mentales Modell", correct: false },
-                { text: "Schemata", correct: false },
-                { text: "Proposition", correct: false },
-                { text: "Semantisches Netzwerk", correct: false },
-                { text: "Skript", correct: true }
-            ]
-        },
-        {
-            id: 56,
-            text: "Welche Aussagen über den Big-Fisch-Little-Pond-Effekt sind RICHTIG? (Multiple Choice)",
-            options: [
-                { text: "Das Fähigkeitsselbstkonzept eines Schülers bzw. einer Schülerin ist unabhängig vom Leistungsniveau der Klasse.", correct: false },
-                { text: "In einer leistungsstarken Klasse führen Aufwärtsvergleiche mit anderen Schülerinnen zu einem niedrigen Fähigkeitskonzept.", correct: true },
-                { text: "Nach dem Wechsel von der Grundschule auf die weiterführende Schule kommt es in der Regel zu großen Veränderungen im Fähigkeitsselbstkonzept von SchülerInnen.", correct: true },
-                { text: "Abwärtsvergleiche mit anderen Schülerinnen führen in der Regel zu einem höheren Fähigkeitsselbstkonzept.", correct: true },
-                { text: "Schülerinnen in leistungsstarken Klassen haben ein höheres Fähigkeitsselbstkonzept als Schülerinnen in leistungsschwachen Klassen.", correct: false }
-            ]
-        },
-        {
-            id: 57,
-            text: "Welche der folgenden Aussagen zur Funktionsweise des Gehirns sind FALSCH? (Multiple Choice)",
-            options: [
-                { text: "Kreativität und Emotionen werden in der rechten Gehirnhälfte verarbeitet.", correct: true },
-                { text: "Rationalität und Logik werden in der linken Gehirnhälfte verarbeitet.", correct: true },
-                { text: "Wir nutzen zu jedem Zeitpunkt unser gesamtes Gehirn", correct: false },
-                { text: "Umwelteinflüsse können die Struktur des Gehirns verändern.", correct: false },
-                { text: "Personen lernen besser, wenn ihnen Informationen entsprechend ihres Lerntyps vermittelt werden.", correct: true }
-            ]
-        },
-        {
-            id: 58,
-            text: "Welche der genannten Lernstrategien sind KEINE metakognitiven Lernstrategien? (Multipel Choice)",
-            options: [
-                { text: "Anfertigen eines Zeitplans für die Übung der Lerninhalte.", correct: false },
-                { text: "Erstellen einer Mind-Map zu den Lerninhalten.", correct: false },
-                { text: "Organisation und Strukturierung der Lerninhalte.", correct: false },
-                { text: "Wiederholen der Lerninhalte.", correct: true }
-            ]
-        },
-        {
-            id: 59,
-            text: "Welche Aussagen zu sozialen Vergleichsprozessen sind FALSCH? (Multiple Choice)",
-            options: [
-                { text: "Soziale Vergleiche sind insbesondere dann von Bedeutung für Menschen, wenn keine objektiven Bewertungsmaßstäbe vorliegen.", correct: false },
-                { text: "Menschen vergleichen sich am ehesten mit Personen, die ihnen ähnlich sind.", correct: false },
-                { text: "In einer sozialen Gruppe haben Menschen das Bestreben, möglichst einzigartig zu sein.", correct: true },
-                { text: "Menschen versuchen, soziale Vergleiche zu vermeiden.", correct: true },
-                { text: "Sozialer Vergleichsprozesse spielen eine zentrale Rolle für das akademische Selbstkonzept von Menschen.", correct: false }
-            ]
-        },
-        {
-            id: 60,
-            text: "Welche der Fähigkeiten zählen NICHT zum psychologischen Intelligenzbegriff? (Multiple Choice)",
-            options: [
-                { text: "Räumliches Denken", correct: false },
-                { text: "Soziale Kompetenz", correct: true },
-                { text: "Bearbeitungsgeschwindigkeit", correct: false },
-                { text: "Empathie", correct: true },
-                { text: "Gedächtnisleistung", correct: false }
-            ]
-        },
-        {
-            id: 61,
-            text: "Welche Formen der neuronalen Plastizität lassen sich NICHT den Phänomenen der Langzeitpotentierung zuordnen? (Multiple Choice)",
-            options: [
-                { text: "Funktionelle Plastizität", correct: false },
-                { text: "Strukturelle Plastizität", correct: true },
-                { text: "Erfahrungserwartende Plastizität", correct: true },
-                { text: "Differenzierte Plastizität", correct: true },
-                { text: "Erfahrungsabhängige Plastizität", correct: true }
-            ]
-        }
-    ];
-
-    let currentQueue = [];
-    let currentIndex = 0;
-    let wrongQuestionIds = JSON.parse(localStorage.getItem('psy_wrong_ids')) || [];
-    let stats = JSON.parse(localStorage.getItem('psy_stats')) || { totalAnswered: 0, totalCorrect: 0 };
-
-    function init() {
-        updateMenuStats();
-    }
-
-    function updateMenuStats() {
-        const statsBox = document.getElementById('statsBox');
-        statsBox.innerHTML = `<strong>Deine Lernstatistik:</strong><br>
-            Beantwortete Fragen gesamt: ${stats.totalAnswered} | Richtig: ${stats.totalCorrect}<br>
-            Aktuell gemerkte Falsch-Fragen: <strong>${wrongQuestionIds.length}</strong>`;
-
-        const repeatBtn = document.getElementById('repeatFalseBtn');
-        const resultRepeatBtn = document.getElementById('resultRepeatFalseBtn');
+        let currentSet = [];
+        let currentIndex = 0;
+        let score = 0;
+        let incorrectQuestions = [];
+        let hasChecked = false;
         
-        if (wrongQuestionIds.length > 0) {
-            repeatBtn.style.display = 'block';
-            resultRepeatBtn.style.display = 'block';
-        } else {
-            repeatBtn.style.display = 'none';
-            resultRepeatBtn.style.display = 'none';
-        }
-    }
+        // Stats
+        let stats = {
+            tests: parseInt(localStorage.getItem('psy_quiz_tests') || '0'),
+            correct: parseInt(localStorage.getItem('psy_quiz_correct') || '0'),
+            wrong: parseInt(localStorage.getItem('psy_quiz_wrong') || '0')
+        };
 
-    function startQuiz(mode) {
-        const isRandom = document.getElementById('randomizeCheck').checked;
-        
-        if (mode === 'all') {
-            currentQueue = [...questionsData];
-        } else if (mode === 'falseOnly') {
-            currentQueue = questionsData.filter(q => wrongQuestionIds.includes(q.id));
+        function updateStatsUI() {
+            document.getElementById('stat-tests').innerText = stats.tests;
+            document.getElementById('stat-correct').innerText = stats.correct;
+            document.getElementById('stat-wrong').innerText = stats.wrong;
         }
 
-        if (isRandom) {
-            currentQueue.sort(() => Math.random() - 0.5);
+        function saveStats() {
+            localStorage.setItem('psy_quiz_tests', stats.tests);
+            localStorage.setItem('psy_quiz_correct', stats.correct);
+            localStorage.setItem('psy_quiz_wrong', stats.wrong);
+            updateStatsUI();
         }
 
-        currentIndex = 0;
-        
-        document.getElementById('menuScreen').classList.remove('active');
-        document.getElementById('resultScreen').classList.remove('active');
-        document.getElementById('quizScreen').classList.add('active');
-        
-        loadQuestion();
-    }
-
-    function loadQuestion() {
-        const q = currentQueue[currentIndex];
-        document.getElementById('questionProgress').innerText = `Frage ${currentIndex + 1} von ${currentQueue.length} (ID: ${q.id})`;
-        document.getElementById('questionText').innerText = q.text;
-        
-        const container = document.getElementById('optionsContainer');
-        container.innerHTML = '';
-        
-        q.options.forEach((opt, index) => {
-            const label = document.createElement('label');
-            label.className = 'option-label';
-            label.id = `optLabel_${index}`;
-            label.innerHTML = `
-                <input type="checkbox" name="quizOpt" value="${index}">
-                <span>${opt.text}</span>
-            `;
-            container.appendChild(label);
-        });
-
-        document.getElementById('feedbackBox').style.display = 'none';
-        document.getElementById('feedbackBox').className = 'feedback-banner';
-        document.getElementById('submitBtn').style.display = 'block';
-        document.getElementById('nextBtn').style.display = 'none';
-    }
-
-    function submitAnswer() {
-        const q = currentQueue[currentIndex];
-        const checkboxes = document.querySelectorAll('input[name="quizOpt"]');
-        
-        let allCorrect = true;
-        q.options.forEach((opt, index) => {
-            const isChecked = checkboxes[index].checked;
-            const shouldBe = opt.correct;
-            const label = document.getElementById(`optLabel_${index}`);
-
-            // Direkt während des Klicks markieren was richtig oder falsch ist
-            if (shouldBe) {
-                label.classList.add('correct-answer');
-            } else if (isChecked && !shouldBe) {
-                label.classList.add('incorrect-answer');
+        function resetStats() {
+            if(confirm("Möchtest du deine Statistiken wirklich zurücksetzen?")) {
+                stats = { tests: 0, correct: 0, wrong: 0 };
+                saveStats();
             }
+        }
 
-            if (isChecked !== shouldBe) {
-                allCorrect = false;
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        }
+
+        function showStartMenu() {
+            updateStatsUI();
+            showView('view-start');
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-        });
+            return arr;
+        }
 
-        stats.totalAnswered++;
-        const feedbackBox = document.getElementById('feedbackBox');
-
-        if (allCorrect) {
-            stats.totalCorrect++;
-            wrongQuestionIds = wrongQuestionIds.filter(id => id !== q.id);
-            feedbackBox.className = 'feedback-banner correct';
-            feedbackBox.innerText = 'Richtig! Alle Punkte korrekt erkannt.';
-        } else {
-            if (!wrongQuestionIds.includes(q.id)) {
-                wrongQuestionIds.push(q.id);
+        function startQuiz(mode) {
+            if (mode === 'chrono') {
+                currentSet = [...allQuestions];
+            } else if (mode === 'random') {
+                currentSet = shuffleArray(allQuestions);
+            } else if (mode === 'retry') {
+                currentSet = [...incorrectQuestions];
             }
-            feedbackBox.className = 'feedback-banner incorrect';
-            feedbackBox.innerText = 'Leider nicht ganz richtig. Die korrekten Antworten sind grün markiert.';
+            
+            currentIndex = 0;
+            score = 0;
+            incorrectQuestions = [];
+            
+            if (currentSet.length === 0) {
+                alert("Keine Fragen vorhanden!");
+                return;
+            }
+            
+            showView('view-quiz');
+            renderQuestion();
         }
 
-        localStorage.setItem('psy_stats', JSON.stringify(stats));
-        localStorage.setItem('psy_wrong_ids', JSON.stringify(wrongQuestionIds));
-
-        // Checkboxen deaktivieren, damit man nach dem Prüfen nichts mehr ändern kann
-        checkboxes.forEach(cb => cb.disabled = true);
-
-        document.getElementById('submitBtn').style.display = 'none';
-        document.getElementById('nextBtn').style.display = 'block';
-    }
-
-    function nextQuestion() {
-        currentIndex++;
-        if (currentIndex < currentQueue.length) {
-            loadQuestion();
-        } else {
-            showResult();
+        function abortQuiz() {
+            if(confirm("Möchtest du das Quiz wirklich abbrechen? Dein Fortschritt wird nicht gespeichert.")) {
+                showStartMenu();
+            }
         }
-    }
 
-    function showResult() {
-        document.getElementById('quizScreen').classList.remove('active');
-        document.getElementById('resultScreen').classList.add('active');
-
-        const resBox = document.getElementById('resultStatsBox');
-        resBox.innerHTML = `Du hast diesen Durchgang abgeschlossen!<br><br>
-            Noch zu übende Fragen im Falsch-Pool: <strong>${wrongQuestionIds.length}</strong>`;
-        updateMenuStats();
-    }
-
-    function abortQuiz() {
-        if (confirm("Möchtest du das Quiz wirklich abbrechen?")) {
-            goToMenu();
+        function renderQuestion() {
+            hasChecked = false;
+            const q = currentSet[currentIndex];
+            
+            // Update Progress
+            document.getElementById('quiz-progress-text').innerText = `Frage ${currentIndex + 1} von ${currentSet.length}`;
+            const percent = ((currentIndex) / currentSet.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = percent + '%';
+            
+            // Render Text
+            document.getElementById('question-text').innerHTML = `<b>${q.id}.</b> ${q.text}`;
+            
+            // Render Options
+            const optsContainer = document.getElementById('options-container');
+            optsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option';
+                optDiv.id = 'opt-' + idx;
+                optDiv.onclick = () => toggleOption(idx);
+                
+                const icon = document.createElement('span');
+                icon.className = 'option-icon';
+                icon.innerText = 'check_box_outline_blank';
+                icon.id = 'icon-' + idx;
+                
+                const textSpan = document.createElement('span');
+                textSpan.innerText = opt.text;
+                
+                optDiv.appendChild(icon);
+                optDiv.appendChild(textSpan);
+                optsContainer.appendChild(optDiv);
+            });
+            
+            // Reset Buttons & Feedback
+            document.getElementById('btn-check').style.display = 'inline-flex';
+            document.getElementById('btn-next').style.display = 'none';
+            const feedback = document.getElementById('feedback-msg');
+            feedback.className = 'feedback';
+            feedback.innerText = '';
         }
-    }
 
-    function goToMenu() {
-        document.getElementById('quizScreen').classList.remove('active');
-        document.getElementById('resultScreen').classList.remove('active');
-        document.getElementById('menuScreen').classList.add('active');
-        updateMenuStats();
-    }
-
-    function resetStats() {
-        if (confirm("Willst du wirklich deine gesamte Statistik und den Falsch-Fragen-Pool zurücksetzen?")) {
-            localStorage.removeItem('psy_stats');
-            localStorage.removeItem('psy_wrong_ids');
-            stats = { totalAnswered: 0, totalCorrect: 0 };
-            wrongQuestionIds = [];
-            updateMenuStats();
+        function toggleOption(idx) {
+            if (hasChecked) return;
+            const optDiv = document.getElementById('opt-' + idx);
+            const icon = document.getElementById('icon-' + idx);
+            
+            if (optDiv.classList.contains('selected')) {
+                optDiv.classList.remove('selected');
+                icon.innerText = 'check_box_outline_blank';
+            } else {
+                optDiv.classList.add('selected');
+                icon.innerText = 'check_box';
+            }
         }
-    }
 
-    window.onload = init;
-</script>
+        function checkAnswer() {
+            if (hasChecked) return;
+            hasChecked = true;
+            
+            const q = currentSet[currentIndex];
+            let isPerfect = true;
+            
+            q.options.forEach((opt, idx) => {
+                const optDiv = document.getElementById('opt-' + idx);
+                const icon = document.getElementById('icon-' + idx);
+                const isSelected = optDiv.classList.contains('selected');
+                
+                optDiv.classList.add('disabled');
+                optDiv.classList.remove('selected');
+                
+                if (opt.isCorrect) {
+                    optDiv.classList.add('correct');
+                    icon.innerText = 'check_circle';
+                    if (!isSelected) isPerfect = false;
+                } else {
+                    if (isSelected) {
+                        optDiv.classList.add('incorrect');
+                        icon.innerText = 'cancel';
+                        isPerfect = false;
+                    } else {
+                        icon.innerText = 'radio_button_unchecked';
+                    }
+                }
+            });
+            
+            const feedback = document.getElementById('feedback-msg');
+            if (isPerfect) {
+                score++;
+                stats.correct++;
+                feedback.innerText = "Richtig!";
+                feedback.className = 'feedback success';
+            } else {
+                incorrectQuestions.push(q);
+                stats.wrong++;
+                feedback.innerText = "Leider nicht ganz richtig.";
+                feedback.className = 'feedback error';
+            }
+            
+            // Update Progress Bar to include current answered question
+            const percent = ((currentIndex + 1) / currentSet.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = percent + '%';
+            
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-flex';
+        }
 
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < currentSet.length) {
+                renderQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            stats.tests++;
+            saveStats();
+            
+            document.getElementById('result-circle').innerText = `${score}/${currentSet.length}`;
+            document.getElementById('result-text').innerText = `Du hast ${score} von ${currentSet.length} Fragen richtig beantwortet.`;
+            
+            const retryBtn = document.getElementById('btn-retry');
+            if (incorrectQuestions.length > 0) {
+                retryBtn.style.display = 'inline-flex';
+                retryBtn.innerText = `Die ${incorrectQuestions.length} falschen Fragen wiederholen`;
+            } else {
+                retryBtn.style.display = 'none';
+            }
+            
+            showView('view-end');
+        }
+
+        // Initialize
+        updateStatsUI();
+
+    </script>
 </body>
 </html>
